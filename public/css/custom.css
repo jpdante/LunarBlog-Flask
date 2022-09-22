@@ -19,4 +19,5 @@ body {
 .page-content {
   background-color: #242424;
   height: calc(100% - 56px) !important;
+  color: #999999;
 }
