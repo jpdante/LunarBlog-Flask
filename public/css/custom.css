@@ -1,0 +1,22 @@
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background-color: #1b1b1b;
+}
+
+.nav-bg {
+  background-color: #242424;
+}
+
+.page-header {
+  box-shadow: 0 0rem 0.4rem rgba(0, 0, 0, 0.5) !important;
+  position: relative;
+}
+
+.page-content {
+  background-color: #242424;
+  height: calc(100% - 56px) !important;
+}
