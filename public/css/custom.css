@@ -43,3 +43,62 @@ body {
 .dropdown-dark .dropdown-item:hover {
   background-color: #313131;
 }
+
+.category-list {
+  background-color: #1B1B1B;
+  border-radius: 10px;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.category-list .list-group {
+  border-radius: 0;
+}
+
+.category-list .list-group-item {
+  background-color: inherit;
+  border-width: 0 0 1px !important;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.category-list .list-group-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: auto;
+}
+
+.signin-page {
+  display: flex;
+  align-items: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  text-align: center;
+  color: #999999;
+}
+
+.form-control {
+  background-color:rgba(0, 0, 0, 0.5);
+  border: #1B1B1B;
+  color: #999999;
+}
+
+.form-control:focus {
+  background-color:rgba(0, 0, 0, 0.5);
+  border: #1B1B1B;
+  color: #999999;
+}
+
+.alert-danger {
+  background-color:#C00E2D;
+  border: none;
+  color: white;
+}
