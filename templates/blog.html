@@ -15,11 +15,29 @@
             <a class="nav-link active" aria-current="page" href="#">Home</a>
           </li>
         </ul>
+        <ul class="navbar-nav mb-2 mb-lg-0">
+          <li class="nav-item dropdown">
+            <a class="user-pp" aria-current="page" href="#" role="button" data-bs-toggle="dropdown"
+              data-bs-display="static" aria-expanded="false">
+              <img src="https://www.gravatar.com/avatar/aaa?s=35" alt="Profile" />
+            </a>
+            <ul class="dropdown-menu dropdown-dark dropdown-menu-end">
+              <li>
+                <a class="dropdown-item" href="#">Profile</a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="#">
+                  <i class="fa-solid fa-user"></i>Logout
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
       </div>
     </div>
   </nav>
 </header>
-<main class="container page-content">
+<main class="container-lg page-content pt-2">
   {% block pagecontent %}{% endblock %}
 </main>
 {% endblock %}

@@ -21,3 +21,25 @@ body {
   height: calc(100% - 56px) !important;
   color: #999999;
 }
+
+.user-pp {
+  display: block;
+  background-color: #212121;
+  height: 35px;
+  width: 35px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.dropdown-dark {
+  background-color: #242424;
+  color: #999999;
+}
+
+.dropdown-dark .dropdown-item {
+  color: #999999;
+}
+
+.dropdown-dark .dropdown-item:hover {
+  background-color: #313131;
+}
