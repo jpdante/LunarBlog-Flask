@@ -3,7 +3,13 @@ Projeto de blog desenvolvido utilizando Python, Flask, SQLAlchemy, Bootstrap, jQ
 
 ## Bibilotecas/Pacotes
 O projeto necessita das seguintes bibliotecas / pacotes para iniciar:
-`flask`, `sqlalchemy`, `argon2-cffi`, `pyjwt[crypto]`
+`flask`, `flask_sqlalchemy`, `flask_migrate`, `argon2-cffi`, `pyjwt[crypto]`
+Use o seguinte comando para instalar os pacotes em um novo environment:
+```bash
+pip install virtualenv
+python -m venv ./venv
+pip install flask sqlalchemy argon2-cffi pyjwt[crypto]
+```
 ## Uso
 Para iniciar o projeto utilize o seguinte comando:
 
