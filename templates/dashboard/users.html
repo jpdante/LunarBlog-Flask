@@ -1,0 +1,139 @@
+{% extends 'dashbase.html' %}
+
+{% block title %}Users - LunarDash{% endblock %}
+
+{% block pagecontent %}
+<div class="px-2" style="height: 100%">
+  <table class="table table-lunar table-striped">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+        <th class="fit" scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+      <tr>
+        <th class="align-middle" scope="row">{% print user.id %}</th>
+        <td>
+          <div class="d-flex align-items-center">
+            <div class="user-pp me-2">
+              <img src="https://www.gravatar.com/avatar/24b5254c3d0cd9068019d8d52d030e54?s=35" alt="Profile">
+            </div>
+            {% print user.name %}
+          </div>
+        </td>
+        <td class="align-middle">{% print user.email %}</td>
+        <td class="align-middle">
+          <div class="d-flex">
+            <button class="btn text-almost-white" href="#" role="button"
+              onclick="editUser('{% print user.id %}', '{% print user.name %}', '{% print user.email %}', '')">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            {% if accountObj['sub'] != user.id %}
+            <button class="btn text-danger" href="#" role="button"
+              onclick="deleteUser('{% print user.name %}', '{% print user.email %}')">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+            {% endif %}
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit User</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="text" class="d-none" name="id" id="editIdInput">
+        <div class="form-floating mb-2">
+          <input type="text" class="form-control" placeholder="Name" id="editNameInput">
+          <label for="floatingName">Name</label>
+        </div>
+        <div class="form-floating mb-2">
+          <input type="text" class="form-control" placeholder="Email" id="editEmailInput">
+          <label for="floatingName">Email</label>
+        </div>
+        <div class="form-floating mb-2">
+          <input type="text" class="form-control" placeholder="Password" id="editPasswordInput">
+          <label for="floatingName">Password leave empty to not change</label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-lunar" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="confirmEditUser()">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Delete User?</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Do you wish to delete user <span id="deleteName"></span>
+        <input type="text" class="d-none" name="id" id="deleteIdInput">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-lunar" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="confirmDeleteUser()">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function editUser(id, name, email, password) {
+    $('#editIdInput').val(id);
+    $('#editNameInput').val(name);
+    $('#editEmailInput').val(email);
+    $('#editPasswordInput').val(password);
+    new bootstrap.Modal($('#editModal'), {}).show();
+  }
+
+  function confirmEditUser() {
+    $.ajax({
+      method: "PATCH",
+      url: "/dashboard/users",
+      data: {
+        id: $('#editIdInput').val(),
+        name: $('#editNameInput').val(),
+        email: $('#editEmailInput').val(),
+        password: $('#editPasswordInput').val()
+      }
+    })
+      .done(function (msg) {
+        window.location.reload(true);
+      });
+  }
+
+  function deleteCategory(id, name) {
+    $('#deleteIdInput').val(id);
+    $('#deleteName').text(name);
+    new bootstrap.Modal($('#deleteModal'), {}).show();
+  }
+
+  function confirmDeleteUser() {
+    $.ajax({
+      method: "DELETE",
+      url: "/dashboard/users",
+      data: { id: $('#deleteIdInput').val() }
+    })
+      .done(function (msg) {
+        window.location.reload(true);
+      });
+  }
+</script>
+{% endblock %}

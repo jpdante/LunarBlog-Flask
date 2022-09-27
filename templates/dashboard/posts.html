@@ -1,0 +1,112 @@
+{% extends 'dashbase.html' %}
+
+{% block title %}Posts - LunarDash{% endblock %}
+
+{% block pagecontent %}
+<div class="px-2" style="height: 100%">
+  <div class="d-flex justify-content-end mb-1">
+    <a class="btn text-success" href="#" role="button" data-bs-toggle="modal" data-bs-target="#addModal">
+      <i class="fa-solid fa-plus"></i>
+    </a>
+  </div>
+  <table class="table table-lunar table-striped">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th class="fit" scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for category in categories %}
+      <tr>
+        <th scope="row">{% print category.id %}</th>
+        <td>{% print category.name %}</td>
+        <td>
+          <div class="d-flex">
+            <button class="btn text-almost-white" href="#" role="button" onclick="editCategory('{% print category.id %}', '{% print category.name %}')">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            <button class="btn text-danger" href="#" role="button" onclick="deleteCategory('{% print category.id %}', '{% print category.name %}')">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add a new category</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-floating mb-2">
+          <input type="text" class="form-control" placeholder="Name" name="name" id="addNameInput">
+          <label for="floatingName">Name</label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-lunar" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Create</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit category</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-floating mb-2">
+          <input type="text" class="form-control" placeholder="Name" name="name" id="editNameInput">
+          <label for="floatingName">Name</label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-lunar" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Delete user?</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Do you wish to delete category <span id="deleteName"></span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-lunar" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function editCategory(id, name) {
+    $('#editNameInput').val(name);
+    new bootstrap.Modal($('#editModal'), {}).show();
+  }
+
+  function deleteCategory(id, name) {
+    $('#deleteName').text(name);
+    new bootstrap.Modal($('#deleteModal'), {}).show();
+  }
+  </script>
+{% endblock %}
