@@ -1,6 +1,9 @@
 # LunarBlog-Flask
 Projeto de blog desenvolvido utilizando Python, Flask, SQLAlchemy, Bootstrap, jQuery e Font Awesome.
 
+## Bibilotecas/Pacotes
+O projeto necessita das seguintes bibliotecas / pacotes para iniciar:
+`flask`, `sqlalchemy`, `argon2-cffi`, `pyjwt[crypto]`
 ## Uso
 Para iniciar o projeto utilize o seguinte comando:
 
