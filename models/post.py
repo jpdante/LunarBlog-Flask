@@ -1,9 +1,9 @@
 from ..extensions import db
 
-class Comment(db.Model):
-    __tablename__ = "comment"
+class Post(db.Model):
+    __tablename__ = "post"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    postId = db.Column(db.Integer(), nullable=False)
     userId = db.Column(db.Integer(), nullable=False)
+    title = db.Column(db.Text, nullable=False)
     content = db.Column(db.Text, nullable=False)
     createdAt = db.Column(db.Date, nullable=False)

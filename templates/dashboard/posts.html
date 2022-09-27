@@ -18,16 +18,16 @@
       </tr>
     </thead>
     <tbody>
-      {% for category in categories %}
+      {% for post in posts %}
       <tr>
-        <th scope="row">{% print category.id %}</th>
-        <td>{% print category.name %}</td>
+        <th scope="row">{% print post.id %}</th>
+        <td>{% print post.name %}</td>
         <td>
           <div class="d-flex">
-            <button class="btn text-almost-white" href="#" role="button" onclick="editCategory('{% print category.id %}', '{% print category.name %}')">
+            <button class="btn text-almost-white" href="#" role="button" onclick="editPost('{% print category.id %}', '{% print category.name %}')">
               <i class="fa-solid fa-pen-to-square"></i>
             </button>
-            <button class="btn text-danger" href="#" role="button" onclick="deleteCategory('{% print category.id %}', '{% print category.name %}')">
+            <button class="btn text-danger" href="#" role="button" onclick="deletePost('{% print category.id %}', '{% print category.name %}')">
               <i class="fa-solid fa-trash"></i>
             </button>
           </div>
@@ -38,43 +38,23 @@
   </table>
 </div>
 
-<div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade modal-xl" id="addModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add a new category</h5>
+        <h5 class="modal-title">Create new post</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <div class="form-floating mb-2">
-          <input type="text" class="form-control" placeholder="Name" name="name" id="addNameInput">
-          <label for="floatingName">Name</label>
+          <input type="text" class="form-control" placeholder="Title" id="addTitleInput">
+          <label for="floatingName">Title</label>
         </div>
+        <textarea id="postArea"></textarea>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-lunar" data-bs-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary">Create</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Edit category</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="form-floating mb-2">
-          <input type="text" class="form-control" placeholder="Name" name="name" id="editNameInput">
-          <label for="floatingName">Name</label>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-lunar" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
   </div>
@@ -88,7 +68,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        Do you wish to delete category <span id="deleteName"></span>
+        Do you wish to delete post <span id="deleteName"></span>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-lunar" data-bs-dismiss="modal">Close</button>
@@ -104,9 +84,13 @@
     new bootstrap.Modal($('#editModal'), {}).show();
   }
 
-  function deleteCategory(id, name) {
+  function deletePost(id, name) {
     $('#deleteName').text(name);
     new bootstrap.Modal($('#deleteModal'), {}).show();
+  }
+
+  window.onload = function() {
+    var simplemde = new SimpleMDE({ element: $("#postArea")[0] });
   }
   </script>
 {% endblock %}

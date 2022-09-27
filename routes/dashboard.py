@@ -1,11 +1,15 @@
+import time
 from flask import Blueprint, render_template, request, current_app, redirect, Response
+
 from ..extensions import db
 from ..models.account import Account
-#from ..models.posts import Post
+from ..models.post import Post
 from ..models.category import Category
 from ..models.comment import Comment
 import jwt
 import hashlib
+from argon2 import PasswordHasher
+ph = PasswordHasher()
 
 dashboardBp = Blueprint('dashboardBp', __name__)
 
@@ -47,38 +51,58 @@ def listUsers():
     
     if request.method == "GET":
         accounts = Account.query.all()
+        for account in accounts:
+            account.hashedEmail = hashlib.md5(bytearray(account.email, 'utf-8')).hexdigest()
         return render_template('/dashboard/users.html', page='users', accountObj=check, users=accounts)
 
     if request.method == "PATCH":
+        id = None
         try:
             id = request.form["id"]
         except:
             return Response('{ "status": "User id required" }', status=400, mimetype='application/json')
         
+        name = None
         try:
             name = request.form["name"]
         except:
             return Response('{ "status": "User name required" }', status=400, mimetype='application/json')
         
+        email = None
         try:
             email = request.form["email"]
         except:
             return Response('{ "status": "User email required" }', status=400, mimetype='application/json')
         
+        password = None
         try:
             password = request.form["password"]
         except:
             pass
         
+        admin = False
+        try:
+            admin = request.form["admin"]
+        except:
+            return Response('{ "status": "User admin field required" }', status=400, mimetype='application/json')
+        
         account = Account.query.get(id)
         if not account:
-            return Response({ "status": "User not found" }, status=404, mimetype='application/json')
-        if check['id'] == account.id:
-            return Response({ "status": "Cannot delete yourself" }, status=403, mimetype='application/json')
+            return Response('{ "status": "User not found" }', status=404, mimetype='application/json')
+        if check['sub'] == str(account.id):
+            return Response('{ "status": "Cannot delete yourself" }', status=403, mimetype='application/json')
         
-        return Response({ "status": "ok" }, status=200, mimetype='application/json')
+        account.name = name
+        account.email = email
+        account.admin = admin == 'true'
+        if password:
+            account.password = ph.hash(password) 
+        db.session.commit()
+        
+        return Response('{ "status": "ok" }', status=200, mimetype='application/json')
 
     if request.method == "DELETE":
+        id = None
         try:
             id = request.form["id"]
         except:
@@ -86,26 +110,86 @@ def listUsers():
 
         account = Account.query.get(id)
         if not account:
-            return Response({ "status": "User not found" }, status=404, mimetype='application/json')
+            return Response('{ "status": "User not found" }', status=404, mimetype='application/json')
         if check['id'] == account.id:
-            return Response({ "status": "Cannot delete yourself" }, status=403, mimetype='application/json')
+            return Response('{ "status": "Cannot delete yourself" }', status=403, mimetype='application/json')
 
         db.session.delete(account)
         db.session.commit()
         
-        return Response({ "status": "ok" }, status=200, mimetype='application/json')
+        return Response('{ "status": "ok" }', status=200, mimetype='application/json')
 
 
-@dashboardBp.route('/dashboard/posts')
+@dashboardBp.route('/dashboard/posts', methods=["GET", "PUT", "PATCH", "DELETE"])
 def listPosts():
     check = checkUser()
     if type(check) == Response:
         return check
+    
+    if request.method == "GET":
+        posts = Post.query.all()
+        return render_template('/dashboard/posts.html', page='posts', accountObj=check, posts=posts)
+    
+    if request.method == "PUT":
+        title = None
+        try:
+            title = request.form["title"]
+        except:
+            return Response('{ "status": "Post title required" }', status=400, mimetype='application/json')
+        
+        content = None
+        try:
+            content = request.form["content"]
+        except:
+            return Response('{ "status": "Post content required" }', status=400, mimetype='application/json')
+        
+        post = Post(userId=check['sub'], title=title, content=content, createdAt=time.time())
+        db.session.add(post)
+        db.session.commit()
 
-    #posts = Post.query.all()
+        return Response('{ "status": "ok" }', status=200, mimetype='application/json')
+    
+    if request.method == "PATCH":
+        id = None
+        title = None
+        content = None
+        try:
+            id = request.form["id"]
+        except:
+            return Response('{ "status": "Post id required" }', status=400, mimetype='application/json')
+            
+        try:
+            title = request.form["title"]
+        except:
+            return Response('{ "status": "Post title required" }', status=400, mimetype='application/json')
+        
+        try:
+            content = request.form["content"]
+        except:
+            return Response('{ "status": "Post content required" }', status=400, mimetype='application/json')
+        
+        post: Post = Post.query.get(id)
+        post.title = title
+        post.content = content
+        db.session.commit()
+        
+        return Response('{ "status": "ok" }', status=200, mimetype='application/json')
+    
+    if request.method == "DELETE":
+        id = None
+        try:
+            id = request.form["id"]
+        except:
+            return Response('{ "status": "Post id required" }', status=400, mimetype='application/json')
 
-    # posts=posts
-    return render_template('/dashboard/posts.html', page='posts', accountObj=check)
+        post: Post = Post.query.get(id)
+        if not post:
+            return Response('{ "status": "Post not found" }', status=404, mimetype='application/json')
+
+        db.session.delete(post)
+        db.session.commit()
+        
+        return Response('{ "status": "ok" }', status=200, mimetype='application/json')
 
 
 @dashboardBp.route('/dashboard/categories', methods=["GET", "PUT", "PATCH", "DELETE"])

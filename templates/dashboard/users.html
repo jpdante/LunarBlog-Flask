@@ -10,6 +10,7 @@
         <th scope="col">#</th>
         <th scope="col">Name</th>
         <th scope="col">Email</th>
+        <th scope="col">Admin</th>
         <th class="fit" scope="col">Actions</th>
       </tr>
     </thead>
@@ -20,16 +21,17 @@
         <td>
           <div class="d-flex align-items-center">
             <div class="user-pp me-2">
-              <img src="https://www.gravatar.com/avatar/24b5254c3d0cd9068019d8d52d030e54?s=35" alt="Profile">
+              <img src="https://www.gravatar.com/avatar/{% print user.hashedEmail %}?s=35" alt="Profile">
             </div>
             {% print user.name %}
           </div>
         </td>
         <td class="align-middle">{% print user.email %}</td>
+        <td class="align-middle">{% if user.admin == True %}<i class="fa-solid fa-circle-check text-success"></i>{% else %}<i class="fa-solid fa-circle-xmark text-danger"></i>{% endif %}</td>
         <td class="align-middle">
           <div class="d-flex">
             <button class="btn text-almost-white" href="#" role="button"
-              onclick="editUser('{% print user.id %}', '{% print user.name %}', '{% print user.email %}', '')">
+              onclick="editUser('{% print user.id %}', '{% print user.name %}', '{% print user.email %}', '', {% if user.admin == True %}true{% else %}false{% endif %})">
               <i class="fa-solid fa-pen-to-square"></i>
             </button>
             {% if accountObj['sub'] != user.id %}
@@ -66,6 +68,12 @@
           <input type="text" class="form-control" placeholder="Password" id="editPasswordInput">
           <label for="floatingName">Password leave empty to not change</label>
         </div>
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="" id="editAdminInput">
+          <label class="form-check-label" for="flexCheckDefault">
+            Admin
+          </label>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-lunar" data-bs-dismiss="modal">Close</button>
@@ -95,11 +103,12 @@
 </div>
 
 <script>
-  function editUser(id, name, email, password) {
+  function editUser(id, name, email, password, admin) {
     $('#editIdInput').val(id);
     $('#editNameInput').val(name);
     $('#editEmailInput').val(email);
     $('#editPasswordInput').val(password);
+    $('#editAdminInput').prop('checked', admin);
     new bootstrap.Modal($('#editModal'), {}).show();
   }
 
@@ -111,7 +120,8 @@
         id: $('#editIdInput').val(),
         name: $('#editNameInput').val(),
         email: $('#editEmailInput').val(),
-        password: $('#editPasswordInput').val()
+        password: $('#editPasswordInput').val(),
+        admin: $('#editAdminInput').prop('checked') === true
       }
     })
       .done(function (msg) {

@@ -85,7 +85,7 @@ body {
   color: #999999;
 }
 
-.form-control {
+.form-control, .form-check-input {
   background-color:rgba(0, 0, 0, 0.5);
   border: #1B1B1B;
   color: #999999;
@@ -149,4 +149,21 @@ body {
   --bs-btn-disabled-color: #fff;
   --bs-btn-disabled-bg: #292929;
   --bs-btn-disabled-border-color: #292929;
+}
+
+.editor-toolbar a {
+  color: white !important;
+}
+
+.editor-toolbar {
+  background-color: #242424 !important;
+}
+
+.editor-toolbar a:hover {
+  background-color: black !important;
+}
+
+.CodeMirror {
+  background-color: #0d0d0d;
+  color: #999999;
 }
