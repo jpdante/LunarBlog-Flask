@@ -8,7 +8,7 @@ Use o seguinte comando para instalar os pacotes em um novo environment:
 ```bash
 pip install virtualenv
 python -m venv ./venv
-pip install flask sqlalchemy argon2-cffi pyjwt[crypto]
+pip install flask flask_sqlalchemy flask_migrate argon2-cffi pyjwt[crypto]
 ```
 ## Uso
 Para iniciar o projeto utilize o seguinte comando:
