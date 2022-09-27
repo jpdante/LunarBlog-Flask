@@ -7,7 +7,7 @@ O projeto necessita das seguintes bibliotecas / pacotes para iniciar:
 `flask`, `flask_sqlalchemy`, `flask_migrate`, `argon2-cffi`, `pyjwt[crypto]`
 
 Utilize o seguinte comando para instalar os pacotes em um novo environment:
-```bash
+```console
 pip install virtualenv
 python -m venv ./venv
 pip install flask flask_sqlalchemy flask_migrate argon2-cffi pyjwt[crypto]
@@ -15,7 +15,7 @@ pip install flask flask_sqlalchemy flask_migrate argon2-cffi pyjwt[crypto]
 ## Uso
 Para iniciar o projeto utilize o seguinte comando:
 
-```bash
+```console
 ./.venv/Scripts/Activate.ps1
 python -m flask --app __init__.py run
 ```
