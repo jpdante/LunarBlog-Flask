@@ -133,6 +133,22 @@ def listCategories():
         return Response('{ "status": "ok", "id": "' + str(category.id) + '" }', status=200, mimetype='application/json')
 
     if request.method == "PATCH":
+        id = None
+        name = None
+        try:
+            id = request.form["id"]
+        except:
+            return Response('{ "status": "Category id required" }', status=400, mimetype='application/json')
+            
+        try:
+            name = request.form["name"]
+        except:
+            return Response('{ "status": "Category name required" }', status=400, mimetype='application/json')
+        
+        category: Category = Category.query.get(id)
+        category.name = name
+        db.session.commit()
+        
         return Response('{ "status": "ok" }', status=200, mimetype='application/json')
 
     if request.method == "DELETE":
@@ -142,7 +158,7 @@ def listCategories():
         except:
             return Response('{ "status": "Category id required" }', status=400, mimetype='application/json')
 
-        category = Category.query.get(id)
+        category: Category = Category.query.get(id)
         if not category:
             return Response('{ "status": "Category not found" }', status=404, mimetype='application/json')
 
