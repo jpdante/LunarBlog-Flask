@@ -1,14 +1,18 @@
 {% extends 'blogbase.html' %}
 
-{% block title %}LunarBlog{% endblock %}
+{% block title %}{% print post.title %} - LunarBlog{% endblock %}
 
 {% block pagecontent %}
 <div class="row px-2 h-100">
   <div class="col-12 col-lg-9 h-100">
     <div class="post-container px-2">
-      {% for post in posts %}
-      {% include 'components/postpreview.html' %}
+      {% include 'components/post.html' %}
+      {% if accountObj != None %}
+      {% include 'components/newcomment.html' %}
+      {% for comment in comments %}
+      {% include 'components/comment.html' %}
       {% endfor %}
+      {% endif %}
     </div>
   </div>
   <div class="col-12 col-lg-3 d-none d-lg-block category-list p-0">

@@ -1,0 +1,28 @@
+<div class="new-comment my-3">
+  <div class="picture-container">
+    <div class="picture">
+      <img src="https://www.gravatar.com/avatar/{% print accountObj['hashedEmail'] %}?s=58" alt="Profile">
+    </div>
+  </div>
+  <div class="builder">
+    <textarea class="form-control" placeholder="Leave a comment here" id="commentTextarea"></textarea>
+    <div class="d-flex justify-content-end mt-1">
+      <button type="button" class="btn btn-darklunar" onclick="sendComment()">
+        <i class="fa-solid fa-paper-plane fa-fw"></i> Send
+      </button>
+    </div>
+  </div>
+</div>
+<hr>
+<script>
+  function sendComment() {
+    $.ajax({
+      method: "PUT",
+      url: "/comment",
+      data: { postId: '{% print post.id %}', content: $('#commentTextarea').val() }
+    })
+      .done(function (msg) {
+        window.location.reload(true);
+      });
+  }
+</script>

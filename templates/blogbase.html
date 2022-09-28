@@ -12,11 +12,11 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
+            <a class="nav-link {% if page == '' %}active{% endif %}" aria-current="page" href="/">Home</a>
           </li>
         </ul>
         <ul class="navbar-nav mb-2 mb-lg-0">
-          {% if loggedin %}
+          {% if accountObj != None %}
           {% include 'components/userbar.html' %}
           {% else %}
           <a class="btn btn-outline-primary" type="submit" href="/login">Login</a>&nbsp;

@@ -1,0 +1,16 @@
+<div class="comment mt-2">
+  <div class="picture-container">
+    <div class="picture">
+      <img src="https://www.gravatar.com/avatar/{% print comment.picture %}?s=45" alt="Profile">
+    </div>
+  </div>
+  <div class="content">
+    <div class="d-flex justify-content-between">
+      <span class="name">{% print comment.name %}</span>
+      <span class="time">{% print comment.createdAt %}</span>
+    </div>
+    <p>
+      {% print comment.content|safe %}
+    </p>
+  </div>
+</div>

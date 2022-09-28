@@ -6,4 +6,4 @@ class Comment(db.Model):
     postId = db.Column(db.Integer(), nullable=False)
     userId = db.Column(db.Integer(), nullable=False)
     content = db.Column(db.Text, nullable=False)
-    createdAt = db.Column(db.Date, nullable=False)
+    createdAt = db.Column(db.DateTime, nullable=False)

@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import datetime
 from flask import Blueprint, render_template, request, current_app, redirect, Response
 
 from ..models.postCategory import PostCategory
@@ -6,7 +6,6 @@ from ..extensions import db
 from ..models.account import Account
 from ..models.post import Post
 from ..models.category import Category
-from ..models.comment import Comment
 import base64
 import jwt
 import hashlib
@@ -162,7 +161,7 @@ def listPosts():
         except:
             return Response('{ "status": "Post content required" }', status=400, mimetype='application/json')
         
-        post = Post(userId=check['sub'], title=title, content=content, createdAt=date.today())
+        post = Post(userId=check['sub'], title=title, content=content, createdAt=datetime.now())
         db.session.add(post)
         db.session.commit()
         

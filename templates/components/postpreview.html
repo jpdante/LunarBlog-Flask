@@ -1,11 +1,11 @@
 <div class="post pb-2 mb-3">
   <div class="d-flex justify-content-between">
-    <a class="title-link" href="/post/{% print post.id %}">{% print post.title %}</a>
+    <a class="title-link" href="/post?id={% print post.id %}">{% print post.title %}</a>
     <span>{% print post.createdAt %}</span>
   </div>
   <div class="categories">
     {% for category in post.categories %}
-    <a class="badge badge-lunar" href="/category/{% print category.id %}">{% print category.name %}</a>
+    <a class="badge badge-lunar" href="/category?id={% print category.id %}">{% print category.name %}</a>
     {% endfor %}
   </div>
   <div class="content content-preview px-2">
@@ -13,6 +13,6 @@
     <div class="preview-block"></div>
   </div>
   <div class="d-flex justify-content-center">
-    <a class="btn btn-darklunar" href="/post/{% print post.id %}">Read more</a>
+    <a class="btn btn-darklunar" href="/post?id={% print post.id %}">Read more</a>
   </div>
 </div>
