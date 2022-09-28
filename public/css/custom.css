@@ -85,7 +85,7 @@ body {
   color: #999999;
 }
 
-.form-control, .form-check-input {
+.form-control, .form-check-input, .form-select {
   background-color:rgba(0, 0, 0, 0.5);
   border: #1B1B1B;
   color: #999999;
@@ -134,6 +134,10 @@ body {
   --bs-modal-color: #999999;
 }
 
+.modal-content .btn-close {
+  background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+}
+
 .btn-lunar {
   --bs-btn-color: #fff;
   --bs-btn-bg: #292929;
@@ -166,4 +170,30 @@ body {
 .CodeMirror {
   background-color: #0d0d0d;
   color: #999999;
+  border: 1px solid #2b2b2b;
+  caret-color: #999999;
+}
+
+.editor-toolbar {
+  background-color: #1B1B1B !important;
+  border-top: 1px solid #2b2b2b;
+  border-left: 1px solid #2b2b2b;
+  border-right: 1px solid #2b2b2b;
+}
+
+.editor-toolbar a.active, .editor-toolbar a:hover {
+  background-color: #2b2b2b !important;
+}
+
+
+.CodeMirror-cursor {
+  border-left: 1px solid #999999;
+}
+
+.editor-toolbar.fullscreen::before {
+  background: none !important;
+}
+
+.editor-toolbar.fullscreen::after {
+  background: none !important;
 }

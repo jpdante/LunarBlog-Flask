@@ -1,4 +1,4 @@
-import time
+from datetime import date
 from flask import Blueprint, render_template, request, current_app, redirect, Response
 
 from ..extensions import db
@@ -6,6 +6,7 @@ from ..models.account import Account
 from ..models.post import Post
 from ..models.category import Category
 from ..models.comment import Comment
+import base64
 import jwt
 import hashlib
 from argon2 import PasswordHasher
@@ -128,22 +129,34 @@ def listPosts():
     
     if request.method == "GET":
         posts = Post.query.all()
-        return render_template('/dashboard/posts.html', page='posts', accountObj=check, posts=posts)
+        categories = Category.query.all()
+        for post in posts:
+            post.content = base64.b64encode(post.content.encode('utf-8')).decode('utf-8')
+            post.categories = categories
+                
+        return render_template('/dashboard/posts.html', page='posts', accountObj=check, posts=posts, categories=categories)
     
     if request.method == "PUT":
         title = None
+        categories = None
+        content = None
         try:
             title = request.form["title"]
         except:
             return Response('{ "status": "Post title required" }', status=400, mimetype='application/json')
         
-        content = None
         try:
-            content = request.form["content"]
+            categories = request.form["categories"]
         except:
             return Response('{ "status": "Post content required" }', status=400, mimetype='application/json')
         
-        post = Post(userId=check['sub'], title=title, content=content, createdAt=time.time())
+        print(base64.b64decode(request.form["content"].encode('utf-8')).decode('utf-8'))
+        try:
+            content = base64.b64decode(request.form["content"].encode('utf-8')).decode('utf-8')
+        except:
+            return Response('{ "status": "Post content required" }', status=400, mimetype='application/json')
+        
+        post = Post(userId=check['sub'], title=title, content=content, createdAt=date.today())
         db.session.add(post)
         db.session.commit()
 
@@ -152,6 +165,7 @@ def listPosts():
     if request.method == "PATCH":
         id = None
         title = None
+        categories = None
         content = None
         try:
             id = request.form["id"]
@@ -164,7 +178,12 @@ def listPosts():
             return Response('{ "status": "Post title required" }', status=400, mimetype='application/json')
         
         try:
-            content = request.form["content"]
+            categories = request.form["categories"]
+        except:
+            return Response('{ "status": "Post content required" }', status=400, mimetype='application/json')
+        
+        try:
+            content = base64.b64decode(request.form["content"].encode('ascii')).decode('utf-8')
         except:
             return Response('{ "status": "Post content required" }', status=400, mimetype='application/json')
         

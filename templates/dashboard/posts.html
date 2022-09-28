@@ -5,29 +5,35 @@
 {% block pagecontent %}
 <div class="px-2" style="height: 100%">
   <div class="d-flex justify-content-end mb-1">
-    <a class="btn text-success" href="#" role="button" data-bs-toggle="modal" data-bs-target="#addModal">
+    <button class="btn text-success" href="#" role="button" onclick="editPost(-1, '', '', '')">
       <i class="fa-solid fa-plus"></i>
-    </a>
+    </button>
   </div>
   <table class="table table-lunar table-striped">
     <thead>
       <tr>
         <th scope="col">#</th>
-        <th scope="col">Name</th>
+        <th scope="col">Title</th>
+        <th scope="col">Categories</th>
+        <th scope="col">Created At</th>
         <th class="fit" scope="col">Actions</th>
       </tr>
     </thead>
     <tbody>
       {% for post in posts %}
       <tr>
-        <th scope="row">{% print post.id %}</th>
-        <td>{% print post.name %}</td>
-        <td>
+        <th class="align-middle" scope="row">{% print post.id %}</th>
+        <td class="align-middle">{% print post.title %}</td>
+        <td class="align-middle">{% for category in post.categories|map(attribute='name') %}<span class="badge bg-secondary me-1">{% print category %}</span>{% endfor %}</td>
+        <td class="align-middle">{% print post.createdAt %}</td>
+        <td class="align-middle">
           <div class="d-flex">
-            <button class="btn text-almost-white" href="#" role="button" onclick="editPost('{% print category.id %}', '{% print category.name %}')">
+            <button class="btn text-almost-white" href="#" role="button"
+              onclick="editPost('{% print post.id %}', '{% print post.title %}', '{% print post.categories|map(attribute='id')|join(',') %}', '{% print post.content %}')">
               <i class="fa-solid fa-pen-to-square"></i>
             </button>
-            <button class="btn text-danger" href="#" role="button" onclick="deletePost('{% print category.id %}', '{% print category.name %}')">
+            <button class="btn text-danger" href="#" role="button"
+              onclick="deletePost('{% print post.id %}', '{% print post.title %}')">
               <i class="fa-solid fa-trash"></i>
             </button>
           </div>
@@ -38,7 +44,7 @@
   </table>
 </div>
 
-<div class="modal fade modal-xl" id="addModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade modal-xl" id="editModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -46,15 +52,24 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
+        <input type="text" class="d-none" name="id" id="postIdInput">
         <div class="form-floating mb-2">
-          <input type="text" class="form-control" placeholder="Title" id="addTitleInput">
+          <input type="text" class="form-control" placeholder="Title" id="postTitleInput">
           <label for="floatingName">Title</label>
         </div>
-        <textarea id="postArea"></textarea>
+        <div class="mb-2">
+          <select class="form-select" multiple aria-label="multiple select" id="postCategoriesInput">
+            <option selected>None</option>
+            {% for category in categories %}
+            <option value="{% print category.id %}">{% print category.name %}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <textarea id="postContentInput"></textarea>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-lunar" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Create</button>
+        <button type="button" class="btn btn-primary" onclick="confirmSavePost()">Save</button>
       </div>
     </div>
   </div>
@@ -69,28 +84,77 @@
       </div>
       <div class="modal-body">
         Do you wish to delete post <span id="deleteName"></span>
+        <input type="text" class="d-none" name="id" id="deleteIdInput">
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-lunar" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Delete</button>
+        <button type="button" class="btn btn-primary" onclick="confirmDeletePost()">Delete</button>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-  function editCategory(id, name) {
-    $('#editNameInput').val(name);
+  function editPost(id, title, categories, content) {
+    $('#postIdInput').val(id);
+    $('#postTitleInput').val(title);
+    $('#postCategoriesInput').val(categories.split(","));
+    if (content !== '') globalThis.simplemde.value(fromBinary(content));
     new bootstrap.Modal($('#editModal'), {}).show();
   }
 
-  function deletePost(id, name) {
-    $('#deleteName').text(name);
+  function confirmSavePost() {
+    $.ajax({
+      method: $('#postIdInput').val() === "-1" ? "PUT" : "PATCH",
+      url: "/dashboard/posts",
+      data: {
+        id: $('#postIdInput').val(),
+        title: $('#postTitleInput').val(),
+        categories: $('#postCategoriesInput').val().join(','),
+        content: toBinary(globalThis.simplemde.value()),
+      }
+    })
+      .done(function (msg) {
+        window.location.reload(true);
+      });
+  }
+
+  function deletePost(id, title) {
+    $('#deleteIdInput').val(id);
+    $('#deleteName').text(title);
     new bootstrap.Modal($('#deleteModal'), {}).show();
   }
 
-  window.onload = function() {
-    var simplemde = new SimpleMDE({ element: $("#postArea")[0] });
+  function confirmDeletePost() {
+    $.ajax({
+      method: "DELETE",
+      url: "/dashboard/posts",
+      data: { id: $('#deleteIdInput').val() }
+    })
+      .done(function (msg) {
+        window.location.reload(true);
+      });
   }
-  </script>
+
+  function toBinary(string) {
+    const codeUnits = new Uint16Array(string.length);
+    for (let i = 0; i < codeUnits.length; i++) {
+      codeUnits[i] = string.charCodeAt(i);
+    }
+    return btoa(String.fromCharCode(...new Uint8Array(codeUnits.buffer)));
+  }
+
+  function fromBinary(encoded) {
+    const binary = atob(encoded);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < bytes.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    return String.fromCharCode(...new Uint16Array(bytes.buffer));
+  }
+
+  window.onload = function () {
+    globalThis.simplemde = new SimpleMDE({ element: $("#postArea")[0] });
+  }
+</script>
 {% endblock %}

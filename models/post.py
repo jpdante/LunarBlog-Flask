@@ -6,4 +6,4 @@ class Post(db.Model):
     userId = db.Column(db.Integer(), nullable=False)
     title = db.Column(db.Text, nullable=False)
     content = db.Column(db.Text, nullable=False)
-    createdAt = db.Column(db.Date, nullable=False)
+    createdAt = db.Column(db.DateTime, nullable=False)
