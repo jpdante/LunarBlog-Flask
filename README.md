@@ -22,8 +22,8 @@ python -m flask --app __init__.py run
 
 Conta padrão:
 ```
-email: admin@admin.com
-senha: admin
+Email: admin@admin.com
+Senha: admin
 ```
 
 ## Projeto
