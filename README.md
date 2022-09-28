@@ -20,5 +20,11 @@ Para iniciar o projeto utilize o seguinte comando:
 python -m flask --app __init__.py run
 ```
 
+Conta padrão:
+```
+email: admin@admin.com
+senha: admin
+```
+
 ## Projeto
 Este projeto foi desenvolvido para o curso de Python avançado para web com flask.

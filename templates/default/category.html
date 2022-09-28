@@ -1,0 +1,24 @@
+{% extends 'blogbase.html' %}
+
+{% block title %}LunarBlog{% endblock %}
+
+{% block pagecontent %}
+<div class="row px-2 h-100">
+  <div class="col-12 col-lg-9 h-100">
+    <div class="post-container px-2">
+      {% for post in posts %}
+      {% include 'components/postpreview.html' %}
+      {% endfor %}
+    </div>
+  </div>
+  <div class="col-12 col-lg-3 d-none d-lg-block category-list p-0">
+    <h5 class="mt-2 ms-3">Categories</h5>
+    <hr class="my-0">
+    <ul class="list-group">
+      {% for category in categories %}
+      <a class="list-group-item {% if category.id == categoryId %}category-active{% endif%}" href="/category?id={% print category.id %}">{% print category.name %}</a>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}

@@ -38,7 +38,7 @@ def home():
         return check
         
     categories = Category.query.all()
-    posts = Post.query.all()
+    posts = Post.query.order_by(Post.createdAt.desc()).all()
     for post in posts:
         post.htmlContent = markdown.markdown(post.content)
         post.categories = []
@@ -47,6 +47,34 @@ def home():
                 if postCategory.categoryId == category.id:
                     post.categories.append(category)
     return render_template('default/home.html', page='',accountObj=check, categories=categories, posts=posts)
+
+@defaultBp.route('/category')
+def category():
+    check = checkUser()
+    if type(check) == Response:
+        return check
+        
+    categoryId = None
+    try:
+        categoryId = request.args.get("id")
+    except:
+        return redirect('/', code=302)
+
+    category = Category.query.get(categoryId)
+    postCategories = PostCategory.query.filter_by(categoryId=category.id)
+    categories = Category.query.all()
+    posts = []
+    for postCategory in postCategories:
+        posts.append(Post.query.get(postCategory.postId))
+
+    for post in posts:
+        post.htmlContent = markdown.markdown(post.content)
+        post.categories = []
+        for postCategory in PostCategory.query.filter_by(postId=post.id):
+            for category in categories:
+                if postCategory.categoryId == category.id:
+                    post.categories.append(category)
+    return render_template('default/category.html', page='',accountObj=check, categoryId=int(categoryId), categories=categories, posts=posts)
 
 @defaultBp.route('/post')
 def post():

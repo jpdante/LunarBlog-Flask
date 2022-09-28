@@ -4,11 +4,6 @@
     <img src="https://www.gravatar.com/avatar/{% print accountObj['hashedEmail'] %}?s=35" alt="Profile" />
   </a>
   <ul class="dropdown-menu dropdown-dark dropdown-menu-end">
-    <li>
-      <a class="dropdown-item" href="#">
-        <i class="fa-solid fa-user fa-fw"></i>&nbsp;Profile
-      </a>
-    </li>
     {% if accountObj['admin'] %}
     <li>
       <a class="dropdown-item" href="/dashboard">

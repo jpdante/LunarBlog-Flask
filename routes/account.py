@@ -11,11 +11,6 @@ ph = PasswordHasher()
 
 accountBp = Blueprint('accountBp', __name__)
 
-@accountBp.route('/migrate')
-def migrate():
-    db.create_all()
-    return "OK"
-
 @accountBp.route('/logout')
 def logout():
     resp = make_response(redirect("/", code=302))
@@ -34,8 +29,6 @@ def login():
         password = request.form["password"]
         if not password:
             return render_template('auth/login.html', error='Password cannot be empty.')
-        if len(password) < 8:
-            return render_template('auth/login.html', error='Password must be at least 8 characters.')
 
         account: Account = Account.query.filter_by(email=email).first()
         if not account:
@@ -44,7 +37,7 @@ def login():
         try:
             if not ph.verify(account.password, password):
                 return render_template('auth/login.html', error='Could not find this user or password is wrong.')
-        except ph.VerifyMismatchError:
+        except:
             return render_template('auth/login.html', error='Could not find this user or password is wrong.')
       
         payload_data = {
