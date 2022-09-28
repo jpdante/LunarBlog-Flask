@@ -99,7 +99,7 @@ def post():
             if postCategory.categoryId == category.id:
                 post.categories.append(category)
                 
-    comments = Comment.query.filter_by(postId=post.id).all()
+    comments = Comment.query.filter_by(postId=post.id).order_by(Comment.createdAt.desc()).all()
     for comment in comments:
         user = Account.query.filter_by(id=post.userId).first()
         comment.picture = hashlib.md5(bytearray(user.email, 'utf-8')).hexdigest()
