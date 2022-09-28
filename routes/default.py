@@ -1,9 +1,10 @@
 from flask import Blueprint, render_template, request, current_app
-from ..extensions import db
-from ..models.account import Account
 from ..models.category import Category
+from ..models.post import Post
+from ..models.postCategory import PostCategory
 import jwt
 import hashlib
+import markdown
 
 defaultBp = Blueprint('defaultBp', __name__)
 
@@ -21,4 +22,12 @@ def home():
             pass
         
     categories = Category.query.all()
-    return render_template('default/home.html', loggedin=loggedin, accountObj=accountObj, categories=categories)
+    posts = Post.query.all()
+    for post in posts:
+        post.htmlContent = markdown.markdown(post.content)
+        post.categories = []
+        for postCategory in PostCategory.query.filter_by(postId=post.id):
+            for category in categories:
+                if postCategory.categoryId == category.id:
+                    post.categories.append(category)
+    return render_template('default/home.html', loggedin=loggedin, accountObj=accountObj, categories=categories, posts=posts)

@@ -1,10 +1,15 @@
 {% extends 'blogbase.html' %}
 
-{% block title %}Blog{% endblock %}
+{% block title %}LunarBlog{% endblock %}
 
 {% block pagecontent %}
-<div class="row px-2" style="height: 100%">
-  <div class="col-12 col-lg-9">
+<div class="row px-2 h-100">
+  <div class="col-12 col-lg-9 h-100">
+    <div class="post-container px-2">
+      {% for post in posts %}
+      {% include 'components/postpreview.html' %}
+      {% endfor %}
+    </div>
   </div>
   <div class="col-12 col-lg-3 d-none d-lg-block category-list p-0">
     <h5 class="mt-2 ms-3">Categories</h5>

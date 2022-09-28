@@ -1,6 +1,7 @@
 from datetime import date
 from flask import Blueprint, render_template, request, current_app, redirect, Response
 
+from ..models.postCategory import PostCategory
 from ..extensions import db
 from ..models.account import Account
 from ..models.post import Post
@@ -132,7 +133,12 @@ def listPosts():
         categories = Category.query.all()
         for post in posts:
             post.content = base64.b64encode(post.content.encode('utf-8')).decode('utf-8')
-            post.categories = categories
+            postCategories = PostCategory.query.filter_by(postId=post.id).all()
+            post.categories = []
+            for category in categories:
+                for postCategory in postCategories:
+                    if category.id == postCategory.categoryId:
+                        post.categories.append(category)
                 
         return render_template('/dashboard/posts.html', page='posts', accountObj=check, posts=posts, categories=categories)
     
@@ -158,6 +164,12 @@ def listPosts():
         
         post = Post(userId=check['sub'], title=title, content=content, createdAt=date.today())
         db.session.add(post)
+        db.session.commit()
+        
+        for category in Category.query.all():
+            for categoryId in categories:
+                if str(category.id) == categoryId:
+                   db.session.add(PostCategory(postId=post.id,categoryId=category.id))
         db.session.commit()
 
         return Response('{ "status": "ok" }', status=200, mimetype='application/json')
@@ -190,6 +202,14 @@ def listPosts():
         post: Post = Post.query.get(id)
         post.title = title
         post.content = content
+        
+        for postCategory in PostCategory.query.filter_by(postId=post.id).all():
+            db.session.delete(postCategory)
+        
+        for category in Category.query.all():
+            for categoryId in categories:
+                if str(category.id) == categoryId:
+                   db.session.add(PostCategory(postId=post.id,categoryId=category.id))
         db.session.commit()
         
         return Response('{ "status": "ok" }', status=200, mimetype='application/json')
@@ -206,6 +226,10 @@ def listPosts():
             return Response('{ "status": "Post not found" }', status=404, mimetype='application/json')
 
         db.session.delete(post)
+        
+        for postCategory in PostCategory.query.filter_by(postId=post.id).all():
+            db.session.delete(postCategory)
+            
         db.session.commit()
         
         return Response('{ "status": "ok" }', status=200, mimetype='application/json')
@@ -265,7 +289,11 @@ def listCategories():
         if not category:
             return Response('{ "status": "Category not found" }', status=404, mimetype='application/json')
 
-        db.session.delete(category)
+        for postCategory in PostCategory.query.filter_by(categoryId=category.id).all():
+            db.session.delete(postCategory)
+
+        db.session.delete(category)  
+        
         db.session.commit()
         
         return Response('{ "status": "ok" }', status=200, mimetype='application/json')

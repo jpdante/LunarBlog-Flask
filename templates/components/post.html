@@ -1,0 +1,14 @@
+<div class="post">
+  <div class="d-flex justify-content-between">
+    <h3 class="title">{% print post.title %}</h3>
+    <span>{% print post.createdAt %}</span>
+  </div>
+  <div class="categories">
+    {% for category in post.categories %}
+    <span class="badge badge-lunar">{% print category.name %}</span>
+    {% endfor %}
+  </div>
+  <div class="content px-2">
+    {% print post.htmlContent|safe %}
+  </div>
+</div>
